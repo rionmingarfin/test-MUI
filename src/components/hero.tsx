@@ -11,7 +11,7 @@ import { GlobalContext } from "@/context/globalState";
 const Hero = () => {
   const { messages, locale } = useContext(GlobalContext);
   return (
-    <div className="bg-white mb-3 md:h-screen flex flex-wrap flex-row items-center justify-center  relative z-[1]">
+    <div className="bg-white mb-3 h-[60vh] md:h-screen flex flex-wrap flex-row items-center justify-center  relative z-[1]">
       <motion.div
         variants={fadeIn("right", "spring", 0.4, 0.9)}
         className="md:w-1/2 text-center md:text-left p-4"

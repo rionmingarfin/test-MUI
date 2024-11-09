@@ -227,7 +227,7 @@ export default function Home() {
                   })}
                 </tbody>
               </table>
-              <div className="flex flex-row flex-wrap gap-4 justify-between m-5 relative">
+              <div className="flex flex-row flex-wrap gap-4 md:justify-between m-5 relative w-max md:w-auto">
                 <div className="flex">
                   <div className="flex justify-center items-center mr-2 md:mr-10">
                     <p className="text-[#FF1744] font-bold text-base">

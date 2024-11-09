@@ -1,11 +1,15 @@
 "use client";
 import { useState, useContext } from "react";
-import { GlobalContext, TLangSelection } from "@/context/globalState";
+import {
+  GlobalContext,
+  TLangSelection,
+  TLanguage,
+} from "@/context/globalState";
 
 const Dropdown = () => {
-  const { setLocale } = useContext(GlobalContext);
+  const { setLocale, language, setLanguage } = useContext(GlobalContext);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [language, setLanguage] = useState<string>("English");
+
   const options = [
     { value: "id", label: "Indonesia" },
     { value: "en", label: "English" },
@@ -14,7 +18,7 @@ const Dropdown = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  const handleUpdate = (val: TLangSelection, label: string) => {
+  const handleUpdate = (val: TLangSelection, label: TLanguage) => {
     setLanguage(label);
     setIsOpen(!isOpen);
     setLocale(val);
@@ -54,7 +58,10 @@ const Dropdown = () => {
               <button
                 key={option.value}
                 onClick={() =>
-                  handleUpdate(option.value as TLangSelection, option.label)
+                  handleUpdate(
+                    option.value as TLangSelection,
+                    option.label as TLanguage
+                  )
                 }
                 className="block py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
                 role="menuitem"
