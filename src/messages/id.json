@@ -1,0 +1,24 @@
+{
+  "home": "Beranda",
+
+  "welcome": "Semua data Pokémon yang Anda perlukan di satu tempat!",
+  "description": "Ribuan data dikumpulkan ke dalam tempat itu",
+  "button": "periksa pokédex",
+
+  "subTitle": "PokeDéx",
+  "subDesc": "Total seluruh generasi",
+
+  "total": "Jumlah data",
+  "page": "Per halaman",
+  "weight": "Berat",
+  "height": "tinggi",
+  "ability": "kemampuan",
+  "type": "Tipe",
+  "detail": "Lebih detail",
+
+  "otherImages": "Gambar lainnya",
+  "stats": "Statistik",
+  "evolution": "evolusi",
+  "typePokemon": "Tipe pokemon",
+  "pokemonWith": "Dengan pokemon"
+}

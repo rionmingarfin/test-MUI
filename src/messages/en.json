@@ -1,0 +1,24 @@
+{
+  "home": "Home",
+
+  "welcome": "All the Pokémon data you'll ever need in one place!",
+  "description": " thousand of data compiled into the place",
+  "button": "Check Pokédek",
+
+  "subTitle": "PokeDéx",
+  "subDesc": "All generation totaling",
+
+  "total": "Total data",
+  "page": "per page",
+  "weight": "Weight",
+  "height": "Height",
+  "ability": "Ability",
+  "type": "Type",
+  "detail": "More detail",
+
+  "otherImages": "Other Images",
+  "stats": "Stats",
+  "evolution": "Evolution",
+  "typePokemon": "Pokemon Type",
+  "pokemonWith": "Pokemon with"
+}
