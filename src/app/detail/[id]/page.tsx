@@ -239,7 +239,7 @@ export default function Detail() {
             <h6 className="text-[#37474F] font-bold text-base py-5">
               {messages[locale].evolution} :
             </h6>
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap justify-center">
               <div className="lg:w-[45%] flex justify-center md:justify-end">
                 <div className="flex justify-start">
                   <div className="flex items-center justify-center">

@@ -133,18 +133,25 @@ export default function Home() {
                 ".MuiSelect-icon": { color: "#FF1744" },
               }}
             >
-              {dataTypes.map((type, num: number) => (
-                <MenuItem value={type.name} key={num}>
-                  {type.name}
-                </MenuItem>
-              ))}
+              {dataTypes.map((type, num: number) => {
+                const name =
+                  type?.name &&
+                  type?.name?.charAt(0).toUpperCase() +
+                    type?.name?.slice(1).toLowerCase();
+                return (
+                  <MenuItem value={type.name} key={num}>
+                    {name}
+                  </MenuItem>
+                );
+              })}
             </Select>
           ) : (
             <ul>
               {dataTypes?.map((type, itype: number) => {
                 const name =
+                  type?.name &&
                   type?.name?.charAt(0).toUpperCase() +
-                  type?.name?.slice(1).toLowerCase();
+                    type?.name?.slice(1).toLowerCase();
                 return (
                   <li
                     key={itype}
