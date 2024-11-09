@@ -17,6 +17,7 @@ import CustomBadge from "@/components/badge";
 import { TStatePokemonType, TStateType } from "@/models/pokemontype";
 import Layout from "@/components/layout";
 import { GlobalContext } from "@/context/globalState";
+import LoadingScreen from "@/components/loading";
 
 export default function Home() {
   const theme = useTheme();
@@ -33,6 +34,7 @@ export default function Home() {
 
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(5);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +52,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const { data } = await axios.get(
           `https://pokeapi.co/api/v2/type/${selectedType}`
@@ -70,8 +73,10 @@ export default function Home() {
           )
         );
         setDetailType(detailTypes);
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
     fetchData();
@@ -158,141 +163,145 @@ export default function Home() {
           )}
         </aside>
 
-        <main className="lg:flex-1 w-full p-6 lg:p-8">
+        <main className="lg:flex-1 w-full p-6 lg:p-8 relative">
           <h1 className="text-2xl font-bold mb-6 text-[#37474F]">
             {messages[locale].pokemonWith} {selectedType}
           </h1>
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left text-[#37474F]">
-              <tbody>
-                {paginatedData.map((pokemon, indexD: number) => {
-                  return (
-                    <tr
-                      className="bg-white bg-opacity-50 rounded-lg  p-4 lg:p-6 border-b-2 cursor-pointer"
-                      key={indexD}
-                      onClick={() =>
-                        router.push(`/detail/${pokemon?.detail?.id}`)
-                      }
-                    >
-                      <td className="px-10 py-10 border-r-2 relative">
-                        <Image
-                          src={
-                            pokemon?.detail?.sprites?.other?.home
-                              ?.front_default ?? pokKind
-                          }
-                          alt={`home index ${indexD}`}
-                          fill
-                          quality={100}
-                          priority
-                          sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          style={{ objectFit: "contain" }}
-                        />
-                      </td>
-                      <td
-                        scope="row"
-                        className="px-6 py-4 font-semibold text-lg whitespace-nowrap border-r-2"
+          {loading ? (
+            <LoadingScreen />
+          ) : (
+            <div className=" overflow-x-auto shadow-md sm:rounded-lg">
+              <table className="w-full text-sm text-left text-[#37474F]">
+                <tbody>
+                  {paginatedData.map((pokemon, indexD: number) => {
+                    return (
+                      <tr
+                        className="bg-white bg-opacity-50 rounded-lg  p-4 lg:p-6 border-b-2 cursor-pointer"
+                        key={indexD}
+                        onClick={() =>
+                          router.push(`/detail/${pokemon?.detail?.id}`)
+                        }
                       >
-                        #{pokemon?.detail?.id}
-                      </td>
-                      <td className="px-6 py-4 border-r-2 font-bold text-lg">
-                        {pokemon.detail?.name}
-                      </td>
-                      <td className="px-6 py-4 flex flex-wrap gap-2">
-                        {pokemon.detail?.types.map((type, i: number) => (
-                          <CustomBadge
-                            key={i}
-                            backgroundColor={colors[i % colors.length]}
-                          >
-                            {type.type.name}
-                          </CustomBadge>
-                        ))}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <div className="flex flex-row flex-wrap gap-4 justify-between m-5 relative">
-              <div className="flex">
-                <div className="flex justify-center items-center mr-2 md:mr-10">
-                  <p className="text-[#FF1744] font-bold text-base">
-                    {messages[locale].page}:
+                        <td className="px-10 py-10 border-r-2 relative">
+                          <Image
+                            src={
+                              pokemon?.detail?.sprites?.other?.home
+                                ?.front_default ?? pokKind
+                            }
+                            alt={`home index ${indexD}`}
+                            fill
+                            quality={100}
+                            priority
+                            sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            style={{ objectFit: "contain" }}
+                          />
+                        </td>
+                        <td
+                          scope="row"
+                          className="px-6 py-4 font-semibold text-lg whitespace-nowrap border-r-2"
+                        >
+                          #{pokemon?.detail?.id}
+                        </td>
+                        <td className="px-6 py-4 border-r-2 font-bold text-lg">
+                          {pokemon.detail?.name}
+                        </td>
+                        <td className="px-6 py-4 flex flex-wrap gap-2">
+                          {pokemon.detail?.types.map((type, i: number) => (
+                            <CustomBadge
+                              key={i}
+                              backgroundColor={colors[i % colors.length]}
+                            >
+                              {type.type.name}
+                            </CustomBadge>
+                          ))}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <div className="flex flex-row flex-wrap gap-4 justify-between m-5 relative">
+                <div className="flex">
+                  <div className="flex justify-center items-center mr-2 md:mr-10">
+                    <p className="text-[#FF1744] font-bold text-base">
+                      {messages[locale].page}:
+                    </p>
+                  </div>
+                  <CustomSelect
+                    itemsPerPage={itemsPerPage}
+                    handleChange={handleChangeLimit}
+                    borderColor="#FF1744"
+                  />
+                </div>
+
+                <div className="flex flex-row md:justify-center items-center w-full md:w-fit order-first md:order-none">
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      borderColor: "red",
+                      color: "red",
+                      borderWidth: 1,
+                      padding: 0.4,
+                      margin: 0,
+                      minWidth: "auto",
+                      borderRadius: 2,
+                      "&:hover": {
+                        borderColor: "red",
+                        backgroundColor: "rgba(255, 0, 0, 0.1)",
+                      },
+                      "& .MuiSvgIcon-root": { margin: 0 },
+                    }}
+                    disabled={page <= 1}
+                    onClick={handleDoublePageMin}
+                  >
+                    <KeyboardDoubleArrowLeftIcon />
+                  </Button>
+                  <CustomPagination
+                    count={Math.ceil(dataDetailTypes.length / itemsPerPage)}
+                    page={page}
+                    onChange={handleChange}
+                    siblingCount={isMobile ? 0 : 1}
+                    boundaryCount={isMobile ? 1 : 2}
+                    borderColor="#FF1744"
+                    selectedBackgroundColor="#FF1744"
+                    selectedColor="white"
+                  />
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      borderColor: "red",
+                      color: "red",
+                      borderWidth: 1,
+                      padding: 0.4,
+                      margin: 0,
+                      minWidth: "auto",
+                      borderRadius: 2,
+                      "&:hover": {
+                        borderColor: "red",
+                        backgroundColor: "rgba(255, 0, 0, 0.1)",
+                      },
+                      "& .MuiSvgIcon-root": { margin: 0 },
+                    }}
+                    onClick={handleDoublePage}
+                    disabled={
+                      page >= Math.ceil(dataDetailTypes.length / itemsPerPage)
+                    }
+                  >
+                    <KeyboardDoubleArrowRightIcon />
+                  </Button>
+                </div>
+
+                <div className="flex justify-center items-center">
+                  <p className="text-[#FF1744] text-md font-bold pr-2 md:pr-5">
+                    {messages[locale].total}:
+                  </p>
+                  <p className="text-[#FF1744] text-md font-bold md:pr-5">
+                    {dataDetailTypes?.length}
                   </p>
                 </div>
-                <CustomSelect
-                  itemsPerPage={itemsPerPage}
-                  handleChange={handleChangeLimit}
-                  borderColor="#FF1744"
-                />
-              </div>
-
-              <div className="flex flex-row md:justify-center items-center w-full md:w-fit order-first md:order-none">
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: "red",
-                    color: "red",
-                    borderWidth: 1,
-                    padding: 0.4,
-                    margin: 0,
-                    minWidth: "auto",
-                    borderRadius: 2,
-                    "&:hover": {
-                      borderColor: "red",
-                      backgroundColor: "rgba(255, 0, 0, 0.1)",
-                    },
-                    "& .MuiSvgIcon-root": { margin: 0 },
-                  }}
-                  disabled={page <= 1}
-                  onClick={handleDoublePageMin}
-                >
-                  <KeyboardDoubleArrowLeftIcon />
-                </Button>
-                <CustomPagination
-                  count={Math.ceil(dataDetailTypes.length / itemsPerPage)}
-                  page={page}
-                  onChange={handleChange}
-                  siblingCount={isMobile ? 0 : 1}
-                  boundaryCount={isMobile ? 1 : 2}
-                  borderColor="#FF1744"
-                  selectedBackgroundColor="#FF1744"
-                  selectedColor="white"
-                />
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: "red",
-                    color: "red",
-                    borderWidth: 1,
-                    padding: 0.4,
-                    margin: 0,
-                    minWidth: "auto",
-                    borderRadius: 2,
-                    "&:hover": {
-                      borderColor: "red",
-                      backgroundColor: "rgba(255, 0, 0, 0.1)",
-                    },
-                    "& .MuiSvgIcon-root": { margin: 0 },
-                  }}
-                  onClick={handleDoublePage}
-                  disabled={
-                    page >= Math.ceil(dataDetailTypes.length / itemsPerPage)
-                  }
-                >
-                  <KeyboardDoubleArrowRightIcon />
-                </Button>
-              </div>
-
-              <div className="flex justify-center items-center">
-                <p className="text-[#FF1744] text-md font-bold pr-2 md:pr-5">
-                  {messages[locale].total}:
-                </p>
-                <p className="text-[#FF1744] text-md font-bold md:pr-5">
-                  {dataDetailTypes?.length}
-                </p>
               </div>
             </div>
-          </div>
+          )}
         </main>
       </div>
     </Layout>

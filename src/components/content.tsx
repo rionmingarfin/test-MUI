@@ -17,6 +17,7 @@ import CustomSelect from "@/components/select";
 import CustomBadge from "@/components/badge";
 import { Ability, IStateDataPokemon } from "@/models/pokemon";
 import { GlobalContext } from "@/context/globalState";
+import LoadingScreen from "@/components/loading";
 
 function Content() {
   const { messages, locale } = useContext(GlobalContext);
@@ -25,6 +26,7 @@ function Content() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
@@ -36,6 +38,7 @@ function Content() {
   useEffect(() => {
     const fetchData = async () => {
       const offset = (page - 1) * itemsPerPage;
+      setLoading(true);
       try {
         const { data } = await axios.get(
           `https://pokeapi.co/api/v2/pokemon/?limit=${itemsPerPage}&offset=${offset}`
@@ -54,7 +57,9 @@ function Content() {
         );
         setCount(data?.count);
         setDataPok(abilityDetails);
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     };
@@ -114,59 +119,63 @@ function Content() {
         </div>
 
         <div className="flex flex-row flex-wrap">
-          {dataPok.map((item, index: number) => {
-            const name =
-              item?.name &&
-              item?.name?.charAt(0).toUpperCase() +
-                item?.name?.slice(1).toLowerCase();
-            return (
-              <div
-                className="w-full overflow-hidden sm:w-1/2 md:w-1/3"
-                key={index}
-              >
+          {loading ? (
+            <LoadingScreen />
+          ) : (
+            dataPok.map((item, index: number) => {
+              const name =
+                item?.name &&
+                item?.name?.charAt(0).toUpperCase() +
+                  item?.name?.slice(1).toLowerCase();
+              return (
                 <div
-                  className="bg-white rounded-3xl shadow p-5 mx-10 my-5 flex-shrink-0 transition-transform duration-500 ease-in-out transform hover:scale-105 cursor-pointer"
-                  onClick={() => handleClickOpen(item)}
+                  className="w-full overflow-hidden sm:w-1/2 md:w-1/3"
+                  key={index}
                 >
-                  <Image
-                    src={
-                      item.detail.sprites.other?.home?.front_default ?? imgPok
-                    }
-                    alt={name}
-                    className="w-full h-auto object-cover"
-                    width={500}
-                    height={500}
-                    quality={100}
-                    priority
-                  />
-                  <p className="font-bold text-gray-400 py-2">
-                    # {item?.detail.id}
-                  </p>
-                  <h2 className="text-3xl font-bold mb-2 text-[#37474F]">
-                    {name}
-                  </h2>
-                  <div className="flex flex-row flex-wrap w-full py-4 gap-2 justify-start">
-                    {item?.detail?.types.map((type, index: number) => (
-                      <Link
-                        href={`/pokemonType?url=${encodeURIComponent(
-                          type?.type?.name
-                        )}`}
-                        key={index}
-                        passHref
-                      >
-                        <CustomBadge
+                  <div
+                    className="bg-white rounded-3xl shadow p-5 mx-10 my-5 flex-shrink-0 transition-transform duration-500 ease-in-out transform hover:scale-105 cursor-pointer"
+                    onClick={() => handleClickOpen(item)}
+                  >
+                    <Image
+                      src={
+                        item.detail.sprites.other?.home?.front_default ?? imgPok
+                      }
+                      alt={name}
+                      className="w-full h-auto object-cover"
+                      width={500}
+                      height={500}
+                      quality={100}
+                      priority
+                    />
+                    <p className="font-bold text-gray-400 py-2">
+                      # {item?.detail.id}
+                    </p>
+                    <h2 className="text-3xl font-bold mb-2 text-[#37474F]">
+                      {name}
+                    </h2>
+                    <div className="flex flex-row flex-wrap w-full py-4 gap-2 justify-start">
+                      {item?.detail?.types.map((type, index: number) => (
+                        <Link
+                          href={`/pokemonType?url=${encodeURIComponent(
+                            type?.type?.name
+                          )}`}
                           key={index}
-                          backgroundColor={colors[index % colors.length]}
+                          passHref
                         >
-                          {type.type.name}
-                        </CustomBadge>
-                      </Link>
-                    ))}
+                          <CustomBadge
+                            key={index}
+                            backgroundColor={colors[index % colors.length]}
+                          >
+                            {type.type.name}
+                          </CustomBadge>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
 
         <div className="flex flex-row flex-wrap gap-4 justify-around md:justify-between my-4 container">
