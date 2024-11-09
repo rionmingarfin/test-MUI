@@ -31,10 +31,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t pokemon/myapp:latest .
+        run: docker build -t 1121998/pokemon:latest .
 
       - name: Push Docker image to Docker Hub
-        run: docker push pokemon/myapp:latest
+        run: docker push 1121998/pokemon:latest
 
       - name: Deploy to Vercel
         run: npx vercel --token ${{ secrets.VERCEL_TOKEN }}
