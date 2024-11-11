@@ -7,7 +7,8 @@ Open https://pokemon-chi-jade.vercel.app/ with your browser to see the result.
 
 - Clone this repository.
 - Run ``` yarn install ```
-- Run ``` yarn dev ```
+- Run ``` yarn build ```
+- Run ``` yarn start ```
 
 ## Specification
 
